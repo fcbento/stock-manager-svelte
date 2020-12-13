@@ -9,12 +9,15 @@
 </script>
 
 <style>
-	span {
-		cursor: pointer;
-		color: #509ae0;
-		border-bottom: 2px solid #509ae0;
-	}
 
+	html, body{
+		height: 100vh;
+	}
+	
+	.container-fluid {
+		padding-left: 0;
+	}
+	
 </style>
 
 <Router {url}>

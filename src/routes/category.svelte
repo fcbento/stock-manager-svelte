@@ -1,9 +1,6 @@
 <script>
-    import Form from "../components/form.svelte";
-    import Table from "../components/table.svelte";
+    import FormTable from "../components/form-table.svelte";
     import { getAll } from "../http/http";
-    
-    let endpoint = "category";
 
     let fields = [
         {
@@ -13,14 +10,13 @@
         }
     ];
 
-    let headers = ['Name'];
-
+    let headers = ["Name"];
 </script>
 
-<Form {fields} {endpoint} />
-
-<Table 
-    type={'category'} 
-    {headers} 
-    body={getAll('categories')}
-/>
+<FormTable
+    {fields}
+    endpoint={'category'}
+    colSize={'col-4'}
+    type={'category'}
+    {headers}
+    body={getAll('categories')} />

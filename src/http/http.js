@@ -16,7 +16,27 @@ export function getAll(endpoint) {
 
   return axios.get(`${url}/${endpoint}`)
     .then(function (response) {
-       return response.data;
+      return response.data;
+    })
+    .catch(function (error) {
+      return error;
+    });
+}
+
+export function remove(id, endpoint) {
+  return axios.delete(`${url}/${endpoint}`, { data: id })
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      return error;
+    });
+}
+
+export function update(body, endpoint) {
+  return axios.put(`${url}/${endpoint}`, body)
+    .then(function (response) {
+      return response.data;
     })
     .catch(function (error) {
       return error;
