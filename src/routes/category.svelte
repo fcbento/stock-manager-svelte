@@ -11,12 +11,14 @@
     ];
 
     let headers = ["Name"];
+    
 </script>
 
 <FormTable
     {fields}
+    {headers}
     endpoint={'category'}
     colSize={'col-4'}
     type={'category'}
-    {headers}
-    body={getAll('categories')} />
+    body={getAll('categories', 0, 10)}
+    getEndpoint={'categories'} />

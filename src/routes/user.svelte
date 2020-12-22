@@ -21,12 +21,14 @@
     ];
 
     let headers = ["Name", "Last name", "Email"];
+    
 </script>
 
 <FormTable
     {fields}
+    {headers}
     endpoint={'user'}
     colSize={'col-4'}
     type={'user'}
-    {headers}
-    body={getAll('users')} />
+    body={getAll('users', 0, 10)}
+    getEndpoint={'users'} />

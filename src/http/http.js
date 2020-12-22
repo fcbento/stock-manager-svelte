@@ -12,9 +12,9 @@ export function create(request, endpoint) {
     });
 }
 
-export function getAll(endpoint) {
+export function getAll(endpoint, page, size) {
 
-  return axios.get(`${url}/${endpoint}`)
+  return axios.get(`${url}/${endpoint}?size=${size}&page=${page}`)
     .then(function (response) {
       return response.data;
     })

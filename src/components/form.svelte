@@ -1,10 +1,10 @@
 <script>
+    import Input from "./input.svelte";
+    import { create, getAll } from "../http/http";
+    
     export let fields;
     export let endpoint;
     export let colSize;
-
-    import Input from "./input.svelte";
-    import { create, getAll } from "../http/http";
 
     let selected;
 
@@ -14,8 +14,7 @@
     };
 
     const toObject = (arr) => {
-        let obj = {};
-        obj = arr.reduce((o, key) => ({ ...o, [key.name]: key.field }), {});
+        let obj = arr.reduce((o, key) => ({ ...o, [key.name]: key.field }), {});
 
         if (obj.hasOwnProperty("category")) {
             obj.category = {
@@ -28,7 +27,6 @@
 </script>
 
 <style>
-    
 </style>
 
 <div class="{colSize} card p-4">
@@ -41,12 +39,13 @@
             {/if}
 
             {#if field.name === 'category'}
-                {#await getAll('categories')}
+                {#await getAll('categories', 0, 40)}
                     <p>...loading</p>
                 {:then response}
                     <select class="form-control" bind:value={selected}>
                         <option value="Select">Select...</option>
-                        {#each response as res}
+
+                        {#each response.content as res}
                             <option value={res.categoryId}>{res.name}</option>
                         {/each}
                     </select>
