@@ -15,13 +15,15 @@
     const paginateForward = () => {
         if (!data.last) {
             currentPage++;
+            clickedPage = currentPage;
             getItems(currentPage);
         }
     };
 
     const paginateBackward = () => {
-        if (!data.first) {
+       if (!data.first) {
             currentPage--;
+            clickedPage = currentPage;
             getItems(currentPage);
         }
     };
