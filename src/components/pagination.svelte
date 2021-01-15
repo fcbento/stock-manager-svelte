@@ -9,7 +9,9 @@
     let currentPage = data.number;
     let modalIsOpen = false;
     let modalBody;
-
+    let pages = [];
+    let clickedPage;
+    
     const paginateForward = () => {
         if (!data.last) {
             currentPage++;
@@ -22,6 +24,11 @@
             currentPage--;
             getItems(currentPage);
         }
+    };
+
+    const paginateWithTotalPage = (page) => {
+        clickedPage = page;
+        getItems(page);
     };
 
     const moneyFormat = (item) => {
@@ -61,6 +68,11 @@
         });
     };
 
+    //put inside a function
+    for (let i = 0; i < data.totalPages; i++) {
+        pages.push(i);
+    }
+
 </script>
 
 {#if data}
@@ -68,12 +80,12 @@
         <tr>
             <td>{item.name}</td>
 
-            {#if type == 'user'}
+            {#if type == "user"}
                 <td>{item.lastName}</td>
                 <td>{item.email}</td>
             {/if}
 
-            {#if type == 'product'}
+            {#if type == "product"}
                 <td>{moneyFormat(item.price)}</td>
                 <td>{item.quantity}</td>
                 <td>{item.category.name}</td>
@@ -96,13 +108,32 @@
         </tr>
     {/each}
 
-    {#if modalIsOpen}
-        <Modal title={getCurrentUrl()} body={modalBody} />
-    {/if}
-
     <div>
-        {#if !data.first}<button on:click={paginateBackward}>{'<'}</button>{/if}
+        {#if modalIsOpen}
+            <Modal title={getCurrentUrl()} body={modalBody} />
+        {/if}
 
-        {#if !data.last}<button on:click={paginateForward}> {'>'} </button>{/if}
+        {#if !data.first}
+            <button on:click={paginateBackward}>{"<"}</button>
+        {/if}
+
+        {#each pages as page}
+            <button
+                style="background: {page === clickedPage ? 'black' : ''}"
+                class="btn btn-primary btn-sm btn-paginate"
+                on:click={() => paginateWithTotalPage(page)}>
+                {page + 1}
+            </button>
+        {/each}
+
+        {#if !data.last}
+            <button on:click={paginateForward}> {">"} </button>
+        {/if}
     </div>
 {/if}
+
+<style>
+    .btn-paginate{
+        margin: 3px;
+    }
+</style>
