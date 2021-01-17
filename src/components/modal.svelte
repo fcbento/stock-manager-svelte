@@ -1,13 +1,19 @@
 <script>
     import Input from "../components/input.svelte";
+    import Label from "../components/label.svelte";
+    import Select from "../components/select.svelte";
+    import Button from "../components/button.svelte";
+
     import { getAll, update } from "../http/http";
 
     export let body;
     export let title;
+    export let modalSize;
+    export let modalPosition;
 
     let selected;
 
-    const saveChanges = () => {
+    let saveChanges = () => {
         switch (title) {
             case "product":
                 update(productReq(body), title);
@@ -33,80 +39,61 @@
             },
         };
     };
+
+    const handleChange = (e) => {
+        selected = e.target.value;
+    };
+
+    const handlePosition = () => {
+        if (modalPosition === "right" && modalSize !== "modal-lg") {
+            return "left: 820px; bottom: 20px;";
+        }
+
+        if (modalPosition === "right" && modalSize === "modal-lg") {
+            return "left: 670px; bottom: 20px;";
+        }
+    };
 </script>
 
-<div
-    class="modal fade"
-    id="editModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog {modalSize}" style={handlePosition()}>
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">
-                    {title.toUpperCase()}
-                </h5>
-                <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title"> {title.toUpperCase()}</h5>
+                <Button type={"closeModal"} />
             </div>
 
             <div class="modal-body">
+
                 <!-- Category -->
-                {#if title === 'category'}
-                    <form>
-                        <div class="form-group">
-                            <label
-                                for="recipient-name"
-                                class="col-form-label">Name
-                            </label>
-                            <Input bind:value={body.name} isEdit={true} />
-                        </div>
-                    </form>
+                {#if title === "category"}
+                    <div class="form-group">
+                        <Label name={"Name"} />
+                        <Input bind:value={body.name} isEdit={true} />
+                    </div>
                 {/if}
 
                 <!-- Product -->
-                {#if title === 'product'}
+                {#if title === "product"}
                     <form>
                         <div class="form-group">
-                            <label
-                                for="recipient-name"
-                                class="col-form-label">Name
-                            </label>
+                            <Label name={"Name"} />
                             <Input bind:value={body.name} isEdit={true} />
-                            <label
-                                for="recipient-name"
-                                class="col-form-label">Price
-                            </label>
+
+                            <Label name={"Price"} />
                             <Input bind:value={body.price} isEdit={true} />
-                            <label
-                                for="recipient-name"
-                                class="col-form-label">Quantity
-                            </label>
+
+                            <Label name={"Quantity"} />
                             <Input bind:value={body.quantity} isEdit={true} />
-                            {#await getAll('categories')}
+
+                            {#await getAll("categories")}
                                 <p>...loading</p>
                             {:then response}
-                                <label
-                                    for="recipient-name"
-                                    class="col-form-label">Category
-                                </label>
-                                <select
-                                    class="form-control"
-                                    bind:value={selected}>
-                                    <option value="Select">Select...</option>
-                                    {#each response as res}
-                                        <option value={res.categoryId}>
-                                            {res.name}
-                                        </option>
-                                    {/each}
-                                </select>
+                                <Label name={"Category"} />
+                                <Select
+                                    onChange={handleChange}
+                                    response={response.content}
+                                />
                             {:catch error}
                                 <p style="color: red">{error.message}</p>
                             {/await}
@@ -114,23 +101,16 @@
                     </form>
                 {/if}
 
-                {#if title === 'user'}
+                {#if title === "user"}
                     <form>
                         <div class="form-group">
-                            <label
-                                for="recipient-name"
-                                class="col-form-label">Name
-                            </label>
+                            <Label name={"Name"} />
                             <Input bind:value={body.name} isEdit={true} />
-                            <label
-                                for="recipient-name"
-                                class="col-form-label">Last name
-                            </label>
+
+                            <Label name={"Last name"} />
                             <Input bind:value={body.lastName} isEdit={true} />
-                            <label
-                                for="recipient-name"
-                                class="col-form-label">Email
-                            </label>
+
+                            <Label name={"Email"} />
                             <Input bind:value={body.email} isEdit={true} />
                         </div>
                     </form>
@@ -138,14 +118,11 @@
             </div>
 
             <div class="modal-footer">
-                <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-dismiss="modal">Close</button>
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    on:click={saveChanges}>Save changes</button>
+                <Button
+                    type={"default"}
+                    name={"Save changes"}
+                    bind:handleClick={saveChanges}
+                />
             </div>
         </div>
     </div>

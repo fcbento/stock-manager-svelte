@@ -1,6 +1,7 @@
 <script>
     import { getAll, remove } from "../http/http";
     import Modal from "../components/modal.svelte";
+    import Button from "../components/button.svelte";
 
     export let data;
     export let type;
@@ -40,7 +41,7 @@
         });
     };
 
-    const deleteItem = (item) => {
+    let deleteItem = (item) => {
         switch (getCurrentUrl()) {
             case "product":
                 remove({ productId: item.productId }, getCurrentUrl());
@@ -52,7 +53,6 @@
                 remove({ userId: item.userId }, getCurrentUrl());
                 break;
         }
-        window.location.reload();
     };
 
     const openModal = (item) => {
@@ -95,24 +95,26 @@
             {/if}
 
             <td>
-                <button
-                    class="btn btn-danger btn-sm"
-                    on:click={deleteItem(item)}>Delete
-                </button>
+                <Button 
+                    type={'modalDelete'} 
+                    name={'Delete'} 
+                    onDelete={() => deleteItem(item)} 
+                    modalActionType={'delete'}
+                />
 
-                <button
-                    class="btn btn-info btn-sm"
-                    on:click={openModal(item)}
-                    data-toggle="modal"
-                    data-target="#editModal">Edit
-                </button>
+                <Button 
+                    type={'modalOpen'} 
+                    name={'Edit'} 
+                    onEdit={() => openModal(item)} 
+                    modalActionType={'edit'}
+                />
             </td>
         </tr>
     {/each}
 
     <div>
         {#if modalIsOpen}
-            <Modal title={getCurrentUrl()} body={modalBody} />
+            <Modal title={getCurrentUrl()} body={modalBody} modalSize={'modal-xl'} modalPosition={'right'}/>
         {/if}
 
         {#if !data.first}
