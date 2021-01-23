@@ -22,14 +22,17 @@
         response = res;
         size = res.totalElements;
         data = res.content;
-        
     });
 
     const moneyFormat = (item) => {
-        return item.toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD",
-        });
+        if (item) {
+            return item.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+            });
+        }else{
+            return '-'
+        }
     };
 
     let deleteItem = (item) => {
@@ -58,57 +61,61 @@
     let getData = async (e) => {
         data = await e.then((result) => result.content);
     };
-
 </script>
 
-    <h3>Total : {size}</h3>
-    <table class="table table-striped">
-        <thead>
-            {#each headers as item}
-                <th>{item}</th>
-            {/each}
-        </thead>
+<h3>Total : {size}</h3>
+<table class="table table-striped">
+    <thead>
+        {#each headers as item}
+            <th>{item}</th>
+        {/each}
+    </thead>
 
-        <tbody>
-            {#each data as item}
-                <tr>
-                    <td>{item.name}</td>
+    <tbody>
+        {#each data as item}
+            <tr>
+                <td>{item.name}</td>
 
-                    {#if type == "user"}
-                        <td>{item.lastName}</td>
-                        <td>{item.email}</td>
-                    {/if}
+                {#if type == "user"}
+                    <td>{item.lastName}</td>
+                    <td>{item.email}</td>
+                {/if}
 
-                    {#if type == "product"}
-                        <td>{moneyFormat(item.price)}</td>
-                        <td>{item.quantity}</td>
-                        <td>{item.category.name}</td>
-                        <td>{moneyFormat(item.price * item.quantity)}</td>
-                    {/if}
+                {#if type == "product"}
+                    <td>{moneyFormat(item.price)}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.category.name}</td>
+                    <td>{moneyFormat(item.price * item.quantity)}</td>
+                {/if}
 
-                    <td>
-                        <Button
-                            type={"modalDelete"}
-                            name={"Delete"}
-                            onDelete={() => deleteItem(item)}
-                            modalActionType={"delete"}
-                        />
+                <td>
+                    <Button
+                        type={"modalDelete"}
+                        name={"Delete"}
+                        onDelete={() => deleteItem(item)}
+                        modalActionType={"delete"}
+                    />
 
-                        <Button
-                            type={"modalOpen"}
-                            name={"Edit"}
-                            onEdit={() => openModal(item)}
-                            modalActionType={"edit"}
-                        />
-                    </td>
-                </tr>
-            {/each}
-           {#if response}  
-                <Pagination data={response} {type} {endpoint} {getEndpoint} bind:getData/>
-            {/if}
-        </tbody>
-    </table>
-
+                    <Button
+                        type={"modalOpen"}
+                        name={"Edit"}
+                        onEdit={() => openModal(item)}
+                        modalActionType={"edit"}
+                    />
+                </td>
+            </tr>
+        {/each}
+        {#if response}
+            <Pagination
+                data={response}
+                {type}
+                {endpoint}
+                {getEndpoint}
+                bind:getData
+            />
+        {/if}
+    </tbody>
+</table>
 
 {#if modalIsOpen}
     <Modal
