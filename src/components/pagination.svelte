@@ -1,143 +1,76 @@
 <script>
-    import { getAll, remove } from "../http/http";
-    import Modal from "../components/modal.svelte";
-    import Button from "../components/button.svelte";
+    import { getAll } from "../http/http";
+    import { onMount } from "svelte";
 
     export let data;
-    export let type;
     export let getEndpoint;
+    export let getData;
 
     let currentPage = data.number;
-    let modalIsOpen = false;
-    let modalBody;
     let pages = [];
-    let clickedPage;
-    
-    const paginateForward = () => {
-        if (!data.last) {
-            currentPage++;
-            clickedPage = currentPage;
-            getItems(currentPage);
+    let clickedPage = 0;
+
+    onMount(() => {
+        for (let i = 0; i < data.totalPages; i++) {
+            pages.push(i);
         }
-    };
+    });
 
-    const paginateBackward = () => {
-       if (!data.first) {
-            currentPage--;
-            clickedPage = currentPage;
-            getItems(currentPage);
-        }
-    };
+    const paginate = (type, page) => {
 
-    const paginateWithTotalPage = (page) => {
-        clickedPage = page;
-        getItems(page);
-    };
+        type == "forward"
+            ? (currentPage = currentPage + 1)
+            : (currentPage = currentPage - 1);
 
-    const moneyFormat = (item) => {
-        return item.toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD",
+        type == "paged" ? (currentPage = page) : 0;
+
+        clickedPage = currentPage;
+
+        return getAll(getEndpoint, currentPage, 10).then((res) => {
+            return (data = res);
         });
     };
-
-    let deleteItem = (item) => {
-        switch (getCurrentUrl()) {
-            case "product":
-                remove({ productId: item.productId }, getCurrentUrl());
-                break;
-            case "category":
-                remove({ categoryId: item.categoryId }, getCurrentUrl());
-                break;
-            case "user":
-                remove({ userId: item.userId }, getCurrentUrl());
-                break;
-        }
-    };
-
-    const openModal = (item) => {
-        modalBody = item;
-        modalIsOpen = true;
-    };
-
-    const getCurrentUrl = () => {
-        return window.location.pathname.split("/")[2];
-    };
-
-    const getItems = (currentPage) => {
-        getAll(getEndpoint, currentPage, 10).then((res) => {
-            data = res;
-        });
-    };
-
-    //put inside a function
-    for (let i = 0; i < data.totalPages; i++) {
-        pages.push(i);
-    }
-
 </script>
 
-{#if data}
-    {#each data.content as item}
-        <tr>
-            <td>{item.name}</td>
+<div class="paginated d-flex justify-content-center">
+    <button
+        class="btn btn-default"
+        on:click={() => getData(paginate("backward", 0))}
+        disabled={data.first}>{"<"}
+    </button>
 
-            {#if type == "user"}
-                <td>{item.lastName}</td>
-                <td>{item.email}</td>
-            {/if}
-
-            {#if type == "product"}
-                <td>{moneyFormat(item.price)}</td>
-                <td>{item.quantity}</td>
-                <td>{item.category.name}</td>
-                <td>{moneyFormat(item.price * item.quantity)}</td>
-            {/if}
-
-            <td>
-                <Button 
-                    type={'modalDelete'} 
-                    name={'Delete'} 
-                    onDelete={() => deleteItem(item)} 
-                    modalActionType={'delete'}
-                />
-
-                <Button 
-                    type={'modalOpen'} 
-                    name={'Edit'} 
-                    onEdit={() => openModal(item)} 
-                    modalActionType={'edit'}
-                />
-            </td>
-        </tr>
+    {#each pages as page}
+        <button
+            style="background: {page === clickedPage ? 'black' : ''}"
+            class="btn btn-primary btn-paginate"
+            on:click={() => getData(paginate("paged", page))}
+            disabled={clickedPage == page}>
+            {page + 1}
+        </button>
     {/each}
 
-    <div>
-        {#if modalIsOpen}
-            <Modal title={getCurrentUrl()} body={modalBody} modalSize={'modal-xl'} modalPosition={'right'}/>
-        {/if}
-
-        {#if !data.first}
-            <button on:click={paginateBackward}>{"<"}</button>
-        {/if}
-
-        {#each pages as page}
-            <button
-                style="background: {page === clickedPage ? 'black' : ''}"
-                class="btn btn-primary btn-sm btn-paginate"
-                on:click={() => paginateWithTotalPage(page)}>
-                {page + 1}
-            </button>
-        {/each}
-
-        {#if !data.last}
-            <button on:click={paginateForward}> {">"} </button>
-        {/if}
-    </div>
-{/if}
+    <button
+        class="btn btn-default"
+        on:click={() => getData(paginate("forward", 0))}
+        disabled={data.last}>
+        {">"}
+    </button>
+</div>
 
 <style>
-    .btn-paginate{
-        margin: 3px;
+
+    .paginated{
+        margin: 20px;
     }
+
+    .btn-paginate {
+        margin: 4px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .btn:focus {
+        box-shadow: none;
+    }
+
 </style>

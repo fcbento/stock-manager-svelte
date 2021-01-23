@@ -45,7 +45,7 @@
             {/if}
 
             {#if field.name === 'category'}
-                {#await getAll('categories', 0, 40)}
+                {#await getAll('categories', 0, 80)}
                     <p>...loading</p>
                 {:then response}
                     <Select onChange={handleChange} response={response.content}/>
