@@ -38,16 +38,16 @@
 
         switch (getCurrentUrl()) {
             case "product":
-                remove({ productId: item.productId }, getCurrentUrl());
+                remove({ productId: item.productId }, endpoint);
                 break;
             case "category":
-                remove({ categoryId: item.categoryId }, getCurrentUrl());
+                remove({ categoryId: item.categoryId }, endpoint);
                 break;
             case "user":
-                remove({ userId: item.userId }, getCurrentUrl());
+                remove({ userId: item.userId }, endpoint);
                 break;
         }
-        
+        window.location.reload();
     };
 
     const openModal = (item) => {

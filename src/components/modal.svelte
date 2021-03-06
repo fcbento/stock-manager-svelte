@@ -3,6 +3,7 @@
     import Label from "../components/label.svelte";
     import Select from "../components/select.svelte";
     import Button from "../components/button.svelte";
+    import Error from "./error.svelte"
 
     import { getAll, update } from "../http/http";
 
@@ -13,32 +14,61 @@
     export let endpoint;
 
     let selected;
+    let showError;
 
     let saveChanges = () => {
         switch (title) {
             case "product":
-                update(productReq(body), endpoint);
+
+                if (!isEmpty(productReq(body))) {
+                    update(productReq(body), endpoint);
+                    window.location.reload();
+                }
+          
                 break;
             case "category":
                 update(body, endpoint);
+                window.location.reload();
                 break;
             case "user":
                 update(body, endpoint);
+                window.location.reload();
                 break;
         }
-        window.location.reload();
+
+    };
+
+    const isEmpty = (obj) => {
+    
+        let notEmpty = false;
+        
+        if (obj) {
+            Object.values(obj).filter((key) => {
+                if (key == undefined || key == null || key == "") {
+                    notEmpty = true;
+                    showError = true;
+                }
+            });
+        }else{
+            notEmpty = true;
+            showError = true;
+        }
+
+        return notEmpty;
     };
 
     const productReq = (body) => {
-        return {
-            productId: body.productId,
-            name: body.name,
-            price: parseInt(body.price),
-            quantity: parseInt(body.quantity),
-            category: {
-                categoryId: selected,
-            },
-        };
+        if (selected) {
+            return {
+                productId: body.productId,
+                name: body.name,
+                price: parseInt(body.price),
+                quantity: parseInt(body.quantity),
+                category: {
+                    categoryId: selected,
+                },
+            };
+        }
     };
 
     const handleChange = (e) => {
@@ -54,19 +84,17 @@
             return "left: 670px; bottom: 20px;";
         }
     };
-    
 </script>
 
 <div class="modal fade" id="editModal">
     <div class="modal-dialog {modalSize}" style={handlePosition()}>
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"> {title.toUpperCase()}</h5>
+                <h5 class="modal-title">{title.toUpperCase()}</h5>
                 <Button type={"closeModal"} />
             </div>
 
             <div class="modal-body">
-
                 <!-- Category -->
                 {#if title === "category"}
                     <div class="form-group">
@@ -120,12 +148,12 @@
             </div>
 
             <div class="modal-footer">
-                <Button
-                    type={"default"}
-                    name={"Save changes"}
-                    bind:handleClick={saveChanges}
-                />
+                <button on:click="{saveChanges}" class="btn btn-primary">Save changes</button>
             </div>
+
+            {#if showError}
+                <Error message={'Problem when trying to edit data. Please verify entered values.'} />
+            {/if}
         </div>
     </div>
 </div>

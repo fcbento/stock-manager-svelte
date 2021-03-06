@@ -3,6 +3,7 @@
     import Label from "./label.svelte";
     import Select from "./select.svelte";
     import Button from "./button.svelte";
+    import Error from "./error.svelte"; 
 
     import { create, getAll } from "../http/http";
 
@@ -63,9 +64,7 @@
 <div class="{colSize} card p-4">
 
     {#if showError}
-        <div class="alert alert-danger">
-            Problem when trying to save. Please verify entered values.
-        </div>
+        <Error message={'Problem when trying to save. Please verify entered values.'} />
     {/if}
 
     {#each fields as field}
