@@ -34,8 +34,8 @@
 <FormTable
     {fields}
     {headers}
-    endpoint={'product'}
+    endpoint={'products'}
     colSize={'col-4'}
     type={'product'}
     body={getAll('products', 0, 10)}
-    getEndpoint={'products'} />
+ />

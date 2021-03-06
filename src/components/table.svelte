@@ -9,7 +9,6 @@
     export let body;
     export let headers;
     export let endpoint;
-    export let getEndpoint;
 
     let modalBody;
     let modalIsOpen = false;
@@ -36,6 +35,7 @@
     };
 
     let deleteItem = (item) => {
+
         switch (getCurrentUrl()) {
             case "product":
                 remove({ productId: item.productId }, getCurrentUrl());
@@ -47,6 +47,7 @@
                 remove({ userId: item.userId }, getCurrentUrl());
                 break;
         }
+        
     };
 
     const openModal = (item) => {
@@ -110,7 +111,6 @@
                 data={response}
                 {type}
                 {endpoint}
-                {getEndpoint}
                 bind:getData
             />
         {/if}
@@ -123,5 +123,6 @@
         body={modalBody}
         modalSize={"modal-xl"}
         modalPosition={"right"}
+        endpoint={endpoint}
     />
 {/if}

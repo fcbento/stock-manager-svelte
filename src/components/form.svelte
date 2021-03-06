@@ -18,13 +18,17 @@
         const o = toObject(fields);
 
         if (o) {
+
+            if(!o){return};
+
             create(o, endpoint);
             showError = false;
-            window.location.assign(endpoint)
+            window.location.reload();
         }
     };
 
     const toObject = (arr) => {
+        
         let obj = arr.reduce((o, key) => ({ ...o, [key.name]: key.field }), {});
 
         if (obj && obj.hasOwnProperty("category") && selected) {

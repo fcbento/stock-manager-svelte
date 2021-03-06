@@ -10,19 +10,20 @@
     export let title;
     export let modalSize;
     export let modalPosition;
+    export let endpoint;
 
     let selected;
 
     let saveChanges = () => {
         switch (title) {
             case "product":
-                update(productReq(body), title);
+                update(productReq(body), endpoint);
                 break;
             case "category":
-                update(body, title);
+                update(body, endpoint);
                 break;
             case "user":
-                update(body, title);
+                update(body, endpoint);
                 break;
         }
         window.location.reload();
@@ -46,13 +47,14 @@
 
     const handlePosition = () => {
         if (modalPosition === "right" && modalSize !== "modal-lg") {
-            return "left: 820px; bottom: 20px;";
+            return "left: 714px; bottom: 21px;";
         }
 
         if (modalPosition === "right" && modalSize === "modal-lg") {
             return "left: 670px; bottom: 20px;";
         }
     };
+    
 </script>
 
 <div class="modal fade" id="editModal">

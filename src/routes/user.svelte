@@ -27,8 +27,8 @@
 <FormTable
     {fields}
     {headers}
-    endpoint={'user'}
+    endpoint={'users'}
     colSize={'col-4'}
     type={'user'}
     body={getAll('users', 0, 10)}
-    getEndpoint={'users'} />
+/>

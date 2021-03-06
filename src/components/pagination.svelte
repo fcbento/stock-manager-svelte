@@ -3,8 +3,8 @@
     import { onMount } from "svelte";
 
     export let data;
-    export let getEndpoint;
     export let getData;
+    export let endpoint;
 
     let currentPage = data.number;
     let pages = [];
@@ -17,16 +17,18 @@
     });
 
     const paginate = (type, page) => {
-
+      
         type == "forward"
-            ? (currentPage = currentPage + 1)
-            : (currentPage = currentPage - 1);
+            ? currentPage = currentPage + 1
+            : currentPage = currentPage - 1;
 
-        type == "paged" ? (currentPage = page) : 0;
+        type == "paged" 
+            ? currentPage = page
+            : 0;
 
         clickedPage = currentPage;
 
-        return getAll(getEndpoint, currentPage, 10).then((res) => {
+        return getAll(endpoint, currentPage, 10).then((res) => {
             return (data = res);
         });
     };

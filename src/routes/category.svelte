@@ -17,8 +17,8 @@
 <FormTable
     {fields}
     {headers}
-    endpoint={'category'}
+    endpoint={'categories'}
     colSize={'col-4'}
     type={'category'}
     body={getAll('categories', 0, 10)}
-    getEndpoint={'categories'} />
+/>

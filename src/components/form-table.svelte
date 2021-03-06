@@ -9,7 +9,6 @@
     export let type;
     export let headers;
     export let body;
-    export let getEndpoint;
 
 </script>
 
@@ -18,7 +17,7 @@
     <Form {fields} {endpoint} {colSize}/>
 
     <div class="col">
-        <Table {type} {headers} {body} {getEndpoint}/>
+        <Table {type} {headers} {body} {endpoint} />
     </div>
     
 </div>
