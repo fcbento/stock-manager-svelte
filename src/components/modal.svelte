@@ -5,7 +5,7 @@
     import Button from "../components/button.svelte";
     import Error from "./error.svelte"
 
-    import { getAll, update } from "../http/http";
+    import HttpHandler from "../http/http";
 
     export let body;
     export let title;
@@ -13,6 +13,7 @@
     export let modalPosition;
     export let endpoint;
 
+    let httpHandler = new HttpHandler();
     let selected;
     let showError;
 
@@ -21,17 +22,17 @@
             case "product":
 
                 if (!isEmpty(productReq(body))) {
-                    update(productReq(body), endpoint);
+                    httpHandler.update(productReq(body), endpoint);
                     window.location.reload();
                 }
           
                 break;
             case "category":
-                update(body, endpoint);
+                httpHandler.update(body, endpoint);
                 window.location.reload();
                 break;
             case "user":
-                update(body, endpoint);
+                httpHandler.update(body, endpoint);
                 window.location.reload();
                 break;
         }
@@ -116,7 +117,7 @@
                             <Label name={"Quantity"} />
                             <Input bind:value={body.quantity} isEdit={true} />
 
-                            {#await getAll("categories")}
+                            {#await httpHandler.getAll("categories")}
                                 <p>...loading</p>
                             {:then response}
                                 <Label name={"Category"} />

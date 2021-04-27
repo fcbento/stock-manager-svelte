@@ -2,7 +2,7 @@
     import Pagination from "../components/pagination.svelte";
     import Modal from "../components/modal.svelte";
     import Button from "../components/button.svelte";
-    import { getAll, remove } from "../http/http";
+    import HttpHandler from "../http/http";
     import { onMount } from "svelte";
 
     export let type;
@@ -10,6 +10,7 @@
     export let headers;
     export let endpoint;
 
+    let httpHandler = new HttpHandler();
     let modalBody;
     let modalIsOpen = false;
     let data = [];
@@ -38,13 +39,13 @@
 
         switch (getCurrentUrl()) {
             case "product":
-                remove({ productId: item.productId }, endpoint);
+                httpHandler.remove({ productId: item.productId }, endpoint);
                 break;
             case "category":
-                remove({ categoryId: item.categoryId }, endpoint);
+                httpHandler.remove({ categoryId: item.categoryId }, endpoint);
                 break;
             case "user":
-                remove({ userId: item.userId }, endpoint);
+                httpHandler.remove({ userId: item.userId }, endpoint);
                 break;
         }
         window.location.reload();

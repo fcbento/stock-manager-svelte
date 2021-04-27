@@ -1,6 +1,8 @@
 <script>
     import FormTable from "../components/form-table.svelte";
-    import { getAll } from "../http/http";
+    import HttpHandler from "../http/http";
+    
+    let httpHandler = new HttpHandler();
 
     let fields = [
         {
@@ -30,5 +32,5 @@
     endpoint={'users'}
     colSize={'col-4'}
     type={'user'}
-    body={getAll('users', 0, 10)}
+    body={httpHandler.getAll('users', 0, 10)}
 />

@@ -1,8 +1,10 @@
 <script>
     import Form from "../components/form.svelte";
     import Table from "../components/table.svelte";
-    import { getAll } from "../http/http";
+    import HttpHandler from "../http/http";
     import FormTable from "../components/form-table.svelte";
+
+    let httpHandler = new HttpHandler();
 
     let fields = [
         {
@@ -37,5 +39,5 @@
     endpoint={'products'}
     colSize={'col-4'}
     type={'product'}
-    body={getAll('products', 0, 10)}
+    body={httpHandler.getAll('products', 0, 10)}
  />

@@ -5,7 +5,7 @@
     import Button from "./button.svelte";
     import Error from "./error.svelte"; 
 
-    import { create, getAll } from "../http/http";
+    import  HttpHandler from "../http/http";
 
     export let fields;
     export let endpoint;
@@ -13,6 +13,8 @@
 
     let selected;
     let showError = false;
+
+    let httpHandler = new HttpHandler();
 
     let save = () => {
 
@@ -22,7 +24,7 @@
 
             if(!o){return};
 
-            create(o, endpoint);
+            httpHandler.create(o, endpoint);
             showError = false;
             window.location.reload();
         }
@@ -76,7 +78,7 @@
             {/if}
 
             {#if field.name === "category"}
-                {#await getAll("categories", 0, 80)}
+                {#await httpHandler.getAll("categories", 0, 80)}
                     <p>...loading</p>
                 {:then response}
                     <Select

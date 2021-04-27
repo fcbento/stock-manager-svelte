@@ -1,10 +1,12 @@
 <script>
-    import { getAll } from "../http/http";
+    import HttpHandler from "../http/http";
     import { onMount } from "svelte";
 
     export let data;
     export let getData;
     export let endpoint;
+
+    let httpHandler = new HttpHandler();
 
     let currentPage = data.number;
     let pages = [];
@@ -19,8 +21,8 @@
     const paginate = (type, page) => {
       
         type == "forward"
-            ? currentPage = currentPage + 1
-            : currentPage = currentPage - 1;
+            ? currentPage++
+            : currentPage--;
 
         type == "paged" 
             ? currentPage = page
@@ -28,7 +30,7 @@
 
         clickedPage = currentPage;
 
-        return getAll(endpoint, currentPage, 10).then((res) => {
+        return httpHandler.getAll(endpoint, currentPage, 10).then((res) => {
             return (data = res);
         });
     };
@@ -38,7 +40,8 @@
     <button
         class="btn btn-default"
         on:click={() => getData(paginate("backward", 0))}
-        disabled={data.first}>{"<"}
+        disabled={data.first}>
+    {"<"}
     </button>
 
     {#each pages as page}
@@ -46,7 +49,8 @@
             style="background: {page === clickedPage ? 'black' : ''}"
             class="btn btn-primary btn-paginate"
             on:click={() => getData(paginate("paged", page))}
-            disabled={clickedPage == page}>
+            disabled={clickedPage == page}
+        >
             {page + 1}
         </button>
     {/each}
@@ -54,14 +58,14 @@
     <button
         class="btn btn-default"
         on:click={() => getData(paginate("forward", 0))}
-        disabled={data.last}>
+        disabled={data.last}
+    >
         {">"}
     </button>
 </div>
 
 <style>
-
-    .paginated{
+    .paginated {
         margin: 20px;
     }
 
@@ -74,5 +78,4 @@
     .btn:focus {
         box-shadow: none;
     }
-
 </style>
