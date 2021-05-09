@@ -91,6 +91,7 @@
                 {#if type == "product"}
                     <td>{moneyFormat(item.price)}</td>
                     <td>{item.quantity}</td>
+                    <td>{item.image ? 'YES' : 'NO'}</td>
                     <td>{item.category.name}</td>
                     <td>{moneyFormat(item.price * item.quantity)}</td>
                 {/if}

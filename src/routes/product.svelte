@@ -23,13 +23,18 @@
             type: "number",
         },
         {
+            name: "image",
+            displayName: "Image URL",
+            type: "text",
+        },
+        {
             name: "category",
             displayName: "Category",
             type: "text",
         }
     ];
 
-    let headers = ["Name", "Price", "Quantity", "Category", "Total"];
+    let headers = ["Name", "Price", "Quantity", "Image URL", "Category", "Total"];
     
 </script>
 
