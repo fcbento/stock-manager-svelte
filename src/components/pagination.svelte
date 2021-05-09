@@ -11,6 +11,7 @@
     let currentPage = data.number;
     let pages = [];
     let clickedPage = 0;
+    let showBtn = endpoint === 'suppliers';
 
     onMount(() => {
         for (let i = 0; i < data.totalPages; i++) {
@@ -35,10 +36,11 @@
         });
     };
 </script>
-
+    
 <div class="paginated d-flex justify-content-center">
     <button
         class="btn btn-default"
+        style={showBtn ? 'display: none' : ''}
         on:click={() => getData(paginate("backward", 0))}
         disabled={data.first}>
     {"<"}
@@ -46,7 +48,7 @@
 
     {#each pages as page}
         <button
-            style="background: {page === clickedPage ? 'black' : ''}"
+            style="background: {page === clickedPage ? 'black' : '' }"
             class="btn btn-primary btn-paginate"
             on:click={() => getData(paginate("paged", page))}
             disabled={clickedPage == page}
@@ -56,6 +58,7 @@
     {/each}
 
     <button
+        style={showBtn ? 'display: none' : ''}
         class="btn btn-default"
         on:click={() => getData(paginate("forward", 0))}
         disabled={data.last}

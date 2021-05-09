@@ -45,7 +45,7 @@ class HttpHandler {
   }
 
   remove(id, endpoint) {
-    return axios.delete(`${url}/${endpoint}`, { headers: headers, data: id })
+    return axios.delete(`${url}/${endpoint}/${id}`, { headers: headers })
       .then((response) => {
         return response.data;
       })

@@ -20,6 +20,7 @@
     onMount(async () => {
         const res = await body.then((result) => result);
         response = res;
+      
         size = res.totalElements;
         data = res.content;
     });
@@ -39,13 +40,16 @@
 
         switch (getCurrentUrl()) {
             case "product":
-                httpHandler.remove({ productId: item.productId }, endpoint);
+                httpHandler.remove(item.productId, endpoint);
                 break;
             case "category":
-                httpHandler.remove({ categoryId: item.categoryId }, endpoint);
+                httpHandler.remove(item.categoryId, endpoint);
                 break;
             case "user":
                 httpHandler.remove({ userId: item.userId }, endpoint);
+                break;
+            case "supplier":
+                httpHandler.remove(item.id, endpoint);
                 break;
         }
         window.location.reload();
@@ -63,6 +67,7 @@
     let getData = async (e) => {
         data = await e.then((result) => result.content);
     };
+
 </script>
 
 <h3>Total : {size}</h3>
@@ -79,8 +84,8 @@
                 <td>{item.name}</td>
 
                 {#if type == "user"}
-                    <td>{item.lastName}</td>
                     <td>{item.email}</td>
+                    <td>{item.role === 1 ? 'ADMIN' : 'CLIENT'}</td>
                 {/if}
 
                 {#if type == "product"}
@@ -88,6 +93,11 @@
                     <td>{item.quantity}</td>
                     <td>{item.category.name}</td>
                     <td>{moneyFormat(item.price * item.quantity)}</td>
+                {/if}
+
+                {#if type == "supplier"}
+                    <td>{item.description}</td>
+                    <td>{item.active ? 'Yes' : 'No'}</td>
                 {/if}
 
                 <td>

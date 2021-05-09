@@ -9,7 +9,6 @@
     export let type;
     export let headers;
     export let body;
-
 </script>
 
 <div class="row">

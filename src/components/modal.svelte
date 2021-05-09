@@ -3,7 +3,7 @@
     import Label from "../components/label.svelte";
     import Select from "../components/select.svelte";
     import Button from "../components/button.svelte";
-    import Error from "./error.svelte"
+    import Error from "./error.svelte";
 
     import HttpHandler from "../http/http";
 
@@ -20,29 +20,33 @@
     let saveChanges = () => {
         switch (title) {
             case "product":
-
                 if (!isEmpty(productReq(body))) {
                     httpHandler.update(productReq(body), endpoint);
                     window.location.reload();
                 }
-          
+
                 break;
+
             case "category":
                 httpHandler.update(body, endpoint);
                 window.location.reload();
                 break;
+
             case "user":
                 httpHandler.update(body, endpoint);
                 window.location.reload();
                 break;
-        }
 
+            case "supplier":
+                httpHandler.update(body, endpoint);
+                window.location.reload();
+                break;
+        }
     };
 
     const isEmpty = (obj) => {
-    
         let notEmpty = false;
-        
+
         if (obj) {
             Object.values(obj).filter((key) => {
                 if (key == undefined || key == null || key == "") {
@@ -50,7 +54,7 @@
                     showError = true;
                 }
             });
-        }else{
+        } else {
             notEmpty = true;
             showError = true;
         }
@@ -146,14 +150,33 @@
                         </div>
                     </form>
                 {/if}
+
+                {#if title === "supplier"}
+                    <form>
+                        <div class="form-group">
+                            <Label name={"Name"} />
+                            <Input bind:value={body.name} isEdit={true} />
+
+                            <Label name={"Description"} />
+                            <Input
+                                bind:value={body.description}
+                                isEdit={true}
+                            />
+                        </div>
+                    </form>
+                {/if}
             </div>
 
             <div class="modal-footer">
-                <button on:click="{saveChanges}" class="btn btn-primary">Save changes</button>
+                <button on:click={saveChanges} class="btn btn-primary"
+                    >Save changes</button
+                >
             </div>
 
             {#if showError}
-                <Error message={'Problem when trying to edit data. Please verify entered values.'} />
+                <Error
+                    message={"Problem when trying to edit data. Please verify entered values."}
+                />
             {/if}
         </div>
     </div>

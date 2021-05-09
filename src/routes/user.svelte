@@ -11,18 +11,23 @@
             type: "text",
         },
         {
-            name: "lastName",
-            displayName: "Last name",
-            type: "text",
-        },
-        {
             name: "email",
             displayName: "Email",
             type: "email",
+        },
+        {
+            name: "password",
+            displayName: "Password",
+            type: "password",
+        },
+        {
+            name: "role",
+            displayName: "Role",
+            type: "number",
         }
     ];
 
-    let headers = ["Name", "Last name", "Email"];
+    let headers = ["Name", "Email", "Role"];
     
 </script>
 

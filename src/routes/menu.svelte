@@ -3,6 +3,7 @@
     import User from "../routes/user.svelte";
     import Category from "./category.svelte";
     import Product from "../routes/product.svelte";
+    import Supplier from "../routes/supplier.svelte";
     import NavLink from "../components/nav-link.svelte";
     import HttpHandler from "../http/http";
     import { onMount } from "svelte";
@@ -20,6 +21,11 @@
         }
 
     });
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        window.location.assign('http://localhost:5000');
+    }
 </script>
 
 <Router>
@@ -42,6 +48,11 @@
                 <li>
                     <NavLink to="#">Order</NavLink>
                 </li>
+                <li>
+                    <NavLink to="supplier">Supplier</NavLink>
+                </li>
+
+                <button on:click={logout}>Logout</button>
             </ul>
         </div>
 
@@ -58,8 +69,14 @@
                 <Route path="product">
                     <Product />
                 </Route>
+
+                <Route path="supplier">
+                    <Supplier />
+                </Route>
             </div>
         </div>
+
+
     </div>
 </Router>
 
