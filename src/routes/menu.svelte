@@ -39,12 +39,12 @@
                 <li>
                     <NavLink to="product">Product</NavLink>
                 </li>
-                <li>
+                <!-- <li>
                     <NavLink to="#">Order</NavLink>
-                </li>
-                <li>
+                </li> -->
+                <!-- <li>
                     <NavLink to="supplier">Supplier</NavLink>
-                </li>
+                </li> -->
 
                 <button on:click={logout}>Logout</button>
             </ul>
