@@ -17,18 +17,15 @@
     let httpHandler = new HttpHandler();
 
     let save = () => {
-        const o = toObject(fields);
-
-        if (o) {
-            httpHandler.create(o, endpoint).then((data) => {
-                if (data.status === 201) {
-                    showError = false;
-                    window.location.reload();
-                } else {
-                    showError = true;
-                }
-            });
-        }
+        const formObject = toObject(fields);
+        httpHandler.create(formObject, endpoint).then((data) => {
+            if (data.status == 201 || data.status == 200) {
+                showError = false;
+                if(endpoint !== 'login') window.location.reload();
+            } else {
+                showError = true;
+            }
+        });
     };
 
     const toObject = (arr) => {

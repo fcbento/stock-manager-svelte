@@ -7,19 +7,13 @@
     import NavLink from "../components/nav-link.svelte";
     import HttpHandler from "../http/http";
     import { onMount } from "svelte";
+    import {getUserInfo} from '../utils/user-info';
 
-    let httpHandler = new HttpHandler();
     let canSee = false;
 
     onMount(async () => {
-        
-        const res = await httpHandler.getInfo("info").then((result) => result);
-        let isAdmin = res.authorities.filter(item => item.authority === "ROLE_ADMIN");
-        
-        if (isAdmin.length > 0) {
-            canSee = true;
-        }
-
+        const isAdmin = getUserInfo().authorities.filter(item => item.authority === "ROLE_ADMIN");
+        if (isAdmin.length > 0) canSee = true;
     });
 
     const logout = () => {

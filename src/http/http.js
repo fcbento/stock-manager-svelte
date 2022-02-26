@@ -1,4 +1,5 @@
 import { headers, url, loginUrl } from './config'
+import {setUserToken, setUserInfo} from '../utils/user-info';
 import axios from 'axios';
 
 class HttpHandler {
@@ -11,7 +12,8 @@ class HttpHandler {
       .then((response) => {
 
         if (response.status === 200 && newUrl) {
-          localStorage.setItem('token', JSON.stringify(response.headers.authorization));
+          setUserToken(response.headers.authorization);
+          setUserInfo(response.data);
           window.location.assign("menu")
         }
 
