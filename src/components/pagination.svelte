@@ -21,13 +21,8 @@
 
     const paginate = (type, page) => {
       
-        type == "forward"
-            ? currentPage++
-            : currentPage--;
-
-        type == "paged" 
-            ? currentPage = page
-            : 0;
+        type == "forward" ? currentPage++ : currentPage--;
+        type == "paged" ? currentPage = page : 0;
 
         clickedPage = currentPage;
 
@@ -37,13 +32,13 @@
     };
 </script>
     
-<div class="paginated d-flex justify-content-center">
+<div class="paginated d-flex justify-content-start">
     <button
         class="btn btn-default"
         style={showBtn ? 'display: none' : ''}
         on:click={() => getData(paginate("backward", 0))}
         disabled={data.first}>
-    {"<"}
+        {"<"}
     </button>
 
     {#each pages as page}
@@ -51,8 +46,7 @@
             style="background: {page === clickedPage ? 'black' : '' }"
             class="btn btn-primary btn-paginate"
             on:click={() => getData(paginate("paged", page))}
-            disabled={clickedPage == page}
-        >
+            disabled={clickedPage == page}>
             {page + 1}
         </button>
     {/each}
@@ -61,15 +55,14 @@
         style={showBtn ? 'display: none' : ''}
         class="btn btn-default"
         on:click={() => getData(paginate("forward", 0))}
-        disabled={data.last}
-    >
+        disabled={data.last}>
         {">"}
     </button>
 </div>
 
 <style>
     .paginated {
-        margin: 20px;
+        margin: 10px;
     }
 
     .btn-paginate {

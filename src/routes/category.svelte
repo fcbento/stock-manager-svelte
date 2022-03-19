@@ -1,26 +1,15 @@
 <script>
-    import FormTable from "../components/form-table.svelte";
     import HttpHandler from "../http/http";
-    
+    import Table from '../components/table.svelte';
+
     let httpHandler = new HttpHandler();
-
-    let fields = [
-        {
-            name: "name",
-            displayName: "Name",
-            type: "text",
-        }
-    ];
-
-    let headers = ["Name"];
+    let headers = ["Name", "Created At"];
     
 </script>
 
-<FormTable
-    {fields}
-    {headers}
-    endpoint={'categories'}
-    colSize={'col-4'}
-    type={'category'}
-    body={httpHandler.getAll('categories', 0, 10)}
+<Table 
+    type={'category'} 
+    {headers} 
+    body={httpHandler.getAll('categories', 0, 10)} 
+    endpoint={'categories'} 
 />

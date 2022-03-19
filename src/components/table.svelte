@@ -20,7 +20,7 @@
     onMount(async () => {
         const res = await body.then((result) => result);
         response = res;
-      
+
         size = res.totalElements;
         data = res.content;
     });
@@ -31,13 +31,12 @@
                 style: "currency",
                 currency: "USD",
             });
-        }else{
-            return '-'
+        } else {
+            return "-";
         }
     };
 
     let deleteItem = (item) => {
-
         switch (getCurrentUrl()) {
             case "product":
                 httpHandler.remove(item.productId, endpoint);
@@ -56,6 +55,7 @@
     };
 
     const openModal = (item) => {
+        console.log(item)
         modalBody = item;
         modalIsOpen = true;
     };
@@ -68,6 +68,34 @@
         data = await e.then((result) => result.content);
     };
 
+    const getObjectProperty = (data, column) => {
+
+        //map this
+        if (column === "created at") {
+            column = "createdAt";
+        }
+        //map this
+        if (column === "image url") {
+            column = "image";
+        }
+
+        //refactor later
+        if (Object.getOwnPropertyNames(data).includes(column.toLowerCase())) {
+            if (typeof data[column] !== "object") {
+                return column === "price"
+                    ? moneyFormat(data[column])
+                    : data[column];
+            } else {
+                return data[column].name;
+            }
+        } else {
+            if (column === "total") {
+                return moneyFormat(data["price"] * data["quantity"]);
+            } else {
+                return new Date(data[column]).toLocaleDateString("en-US");
+            }
+        }
+    };
 </script>
 
 <h3>Total : {size}</h3>
@@ -81,26 +109,9 @@
     <tbody>
         {#each data as item}
             <tr>
-                <td>{item.name}</td>
-
-                {#if type == "user"}
-                    <td>{item.email}</td>
-                    <td>{item.role === 1 ? 'ADMIN' : 'CLIENT'}</td>
-                {/if}
-
-                {#if type == "product"}
-                    <td>{moneyFormat(item.price)}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.image ? 'YES' : 'NO'}</td>
-                    <td>{item.category.name}</td>
-                    <td>{moneyFormat(item.price * item.quantity)}</td>
-                {/if}
-
-                {#if type == "supplier"}
-                    <td>{item.description}</td>
-                    <td>{item.active ? 'Yes' : 'No'}</td>
-                {/if}
-
+                {#each headers as column}
+                    <td>{getObjectProperty(item, column.toLowerCase())}</td>
+                {/each}
                 <td>
                     <Button
                         type={"modalDelete"}
@@ -119,12 +130,7 @@
             </tr>
         {/each}
         {#if response}
-            <Pagination
-                data={response}
-                {type}
-                {endpoint}
-                bind:getData
-            />
+            <Pagination data={response} {type} {endpoint} bind:getData />
         {/if}
     </tbody>
 </table>
@@ -135,6 +141,6 @@
         body={modalBody}
         modalSize={"modal-xl"}
         modalPosition={"right"}
-        endpoint={endpoint}
+        {endpoint}
     />
 {/if}

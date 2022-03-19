@@ -68,6 +68,8 @@
                 productId: body.productId,
                 name: body.name,
                 price: parseInt(body.price),
+                createdAt: body.createdAt,
+                image: body.image,
                 quantity: parseInt(body.quantity),
                 category: {
                     categoryId: selected,
@@ -117,6 +119,12 @@
 
                             <Label name={"Price"} />
                             <Input bind:value={body.price} isEdit={true} />
+
+                            <Label name={"Created At"} />
+                            <Input bind:value={body.createdAt} isEdit={true} />
+
+                            <Label name={"Image URL"} />
+                            <Input bind:value={body.image} isEdit={true} />
 
                             <Label name={"Quantity"} />
                             <Input bind:value={body.quantity} isEdit={true} />

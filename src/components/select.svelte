@@ -1,7 +1,7 @@
 <script>
     export let response;
 
-    export let onChange = (e) => {
+    export let onChange = () => {
         if ("function" === typeof onChange) {
             onChange(selected);
         }
