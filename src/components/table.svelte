@@ -4,11 +4,15 @@
     import Button from "../components/button.svelte";
     import HttpHandler from "../http/http";
     import { onMount } from "svelte";
+    import { moneyFormat } from "../utils/money-format";
+    import { dateFormat } from "../utils/date-format";
 
     export let type;
     export let body;
     export let headers;
     export let endpoint;
+    export let columns;
+    export let showCheckbox;
 
     let httpHandler = new HttpHandler();
     let modalBody;
@@ -16,6 +20,7 @@
     let data = [];
     let size = 0;
     let response;
+    let selectedItems = [];
 
     onMount(async () => {
         const res = await body.then((result) => result);
@@ -24,17 +29,6 @@
         size = res.totalElements;
         data = res.content;
     });
-
-    const moneyFormat = (item) => {
-        if (item) {
-            return item.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-            });
-        } else {
-            return "-";
-        }
-    };
 
     let deleteItem = (item) => {
         switch (getCurrentUrl()) {
@@ -55,7 +49,6 @@
     };
 
     const openModal = (item) => {
-        console.log(item)
         modalBody = item;
         modalIsOpen = true;
     };
@@ -69,37 +62,47 @@
     };
 
     const getObjectProperty = (data, column) => {
+        let value = "";
 
-        //map this
-        if (column === "created at") {
-            column = "createdAt";
-        }
-        //map this
-        if (column === "image url") {
-            column = "image";
-        }
+        if (column.isDate) {
+            value = dateFormat(data[column.name]);
+            
+        } else if (column.isObject) {
+            value = data[column.name].name;
 
-        //refactor later
-        if (Object.getOwnPropertyNames(data).includes(column.toLowerCase())) {
-            if (typeof data[column] !== "object") {
-                return column === "price"
-                    ? moneyFormat(data[column])
-                    : data[column];
-            } else {
-                return data[column].name;
-            }
+        } else if (column.isTotal) {
+            value = moneyFormat(column.calc(data[column.fieldToCalcX], data[column.fieldToCalcY]));
+
+        } else if (column.isCurrency) {
+            value = moneyFormat(data[column.name]);
+
         } else {
-            if (column === "total") {
-                return moneyFormat(data["price"] * data["quantity"]);
-            } else {
-                return new Date(data[column]).toLocaleDateString("en-US");
-            }
+            value = data[column.name];
         }
+
+        return value;
+    };
+
+    const getCheckBoxValue = (event, item) => {
+        if (event.target.checked) {
+            selectedItems = addItemToArray(item);
+        } else {
+            selectedItems = removeItemToArray(selectedItems.indexOf(item))
+        }
+    };
+
+    const addItemToArray = (item) => {
+        return [...selectedItems, item];
+    };
+
+    const removeItemToArray = (index) => {
+        if (index > -1) selectedItems.splice(index, 1);
+        return selectedItems;
     };
 </script>
 
 <h3>Total : {size}</h3>
-<table class="table table-striped">
+<table class="table table-striped col">
     <thead>
         {#each headers as item}
             <th>{item}</th>
@@ -107,12 +110,35 @@
     </thead>
 
     <tbody>
+
+        {#if showCheckbox && selectedItems.length > 0}
+            Remove {selectedItems.length} selected items            
+        {/if}
+
         {#each data as item}
             <tr>
-                {#each headers as column}
-                    <td>{getObjectProperty(item, column.toLowerCase())}</td>
+                {#if showCheckbox}
+                    <td>
+                        <input
+                            type="checkbox"
+                            on:click={getCheckBoxValue(event, item)}
+                        />
+                    </td>
+                {/if}
+
+                {#each columns as column}
+                    <td>
+                        
+                        {#if column.isImage}
+                            <a href="http://" target="_blank">{getObjectProperty(item, column)}</a>
+                        {/if}
+
+                        {#if !column.isImage}
+                            {getObjectProperty(item, column)}
+                        {/if}
+                    </td>
                 {/each}
-                <td>
+                <!-- <td>
                     <Button
                         type={"modalDelete"}
                         name={"Delete"}
@@ -126,7 +152,7 @@
                         onEdit={() => openModal(item)}
                         modalActionType={"edit"}
                     />
-                </td>
+                </td> -->
             </tr>
         {/each}
         {#if response}
