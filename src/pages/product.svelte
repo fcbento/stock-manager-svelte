@@ -41,7 +41,8 @@
     
 </script>
 
-<Table 
+<Table
+    editable={true}
     showCheckbox={true}
     {columns}
     type={'product'} 

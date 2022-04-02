@@ -27,6 +27,15 @@
     </button>
 {/if}
 
+{#if type === 'link'}
+    <button
+        style="width: 50%"
+        class="btn btn-link"
+        on:click={handleClick}>
+        {name}
+    </button>
+{/if}
+
 {#if modalActionType === "edit" && type !== "modalOpen"}
     <button
         class="btn btn-info"
@@ -56,9 +65,9 @@
 
 {#if type === "modalOpen"}
     <button 
-        class="btn btn-info btn-sm"
+        class="btn btn-link btn-sm"
         on:click={() => onEdit()}
         data-toggle="modal"
-        data-target="#editModal">Edit
+        data-target="#editModal">{name}
     </button>
 {/if}

@@ -20,6 +20,7 @@
 </script>
 
 <Table
+    editable={true}
     showCheckbox={true}
     {columns}
     type={"category"}

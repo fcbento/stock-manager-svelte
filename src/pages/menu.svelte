@@ -1,9 +1,9 @@
 <script>
-    import { Router, Link, Route } from "svelte-routing";
-    import User from "../routes/user.svelte";
+    import { Router, Route } from "svelte-routing";
+    import User from "./user.svelte";
     import Category from "./category.svelte";
-    import Product from "../routes/product.svelte";
-    import Supplier from "../routes/supplier.svelte";
+    import Product from "./product.svelte";
+    import Supplier from "./supplier.svelte";
     import NavLink from "../components/nav-link.svelte";
     import HttpHandler from "../http/http";
     import { onMount } from "svelte";
@@ -50,7 +50,7 @@
             </ul>
         </div>
 
-        <div class="col">
+        <div class="col-9">
             <div class="components">
                 <Route path="user">
                     <User />

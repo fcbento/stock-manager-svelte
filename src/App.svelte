@@ -1,8 +1,8 @@
 <script>
 	import { Router, Link, Route } from "svelte-routing";
 
-	import Home from "./routes/Home.svelte";
-	import Menu from './routes/Menu.svelte'
+	import Home from "./pages/Home.svelte";
+	import Menu from './pages/Menu.svelte'
 
 	export let url = "";
 

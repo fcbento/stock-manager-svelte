@@ -1,6 +1,5 @@
 <script>
     import Image from "../components/image.svelte";
-    import NavLink from "../components/nav-link.svelte";
     import Login from './login.svelte';
 </script>
 

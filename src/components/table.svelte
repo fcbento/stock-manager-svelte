@@ -13,6 +13,7 @@
     export let endpoint;
     export let columns;
     export let showCheckbox;
+    export let editable;
 
     let httpHandler = new HttpHandler();
     let modalBody;
@@ -66,16 +67,17 @@
 
         if (column.isDate) {
             value = dateFormat(data[column.name]);
-            
         } else if (column.isObject) {
             value = data[column.name].name;
-
         } else if (column.isTotal) {
-            value = moneyFormat(column.calc(data[column.fieldToCalcX], data[column.fieldToCalcY]));
-
+            value = moneyFormat(
+                column.calc(
+                    data[column.fieldToCalcX],
+                    data[column.fieldToCalcY]
+                )
+            );
         } else if (column.isCurrency) {
             value = moneyFormat(data[column.name]);
-
         } else {
             value = data[column.name];
         }
@@ -87,7 +89,7 @@
         if (event.target.checked) {
             selectedItems = addItemToArray(item);
         } else {
-            selectedItems = removeItemToArray(selectedItems.indexOf(item))
+            selectedItems = removeItemToArray(selectedItems.indexOf(item));
         }
     };
 
@@ -102,7 +104,7 @@
 </script>
 
 <h3>Total : {size}</h3>
-<table class="table table-striped col">
+<table class="table col">
     <thead>
         {#each headers as item}
             <th>{item}</th>
@@ -110,9 +112,8 @@
     </thead>
 
     <tbody>
-
         {#if showCheckbox && selectedItems.length > 0}
-            Remove {selectedItems.length} selected items            
+            Delete {selectedItems.length}
         {/if}
 
         {#each data as item}
@@ -128,12 +129,16 @@
 
                 {#each columns as column}
                     <td>
-                        
                         {#if column.isImage}
-                            <a href="http://" target="_blank">{getObjectProperty(item, column)}</a>
-                        {/if}
-
-                        {#if !column.isImage}
+                            <span class="material-icons"> image </span>
+                        {:else if column.name === "name" && editable}
+                            <Button
+                                type={"modalOpen"}
+                                name={getObjectProperty(item, column)}
+                                onEdit={() => openModal(item)}
+                                modalActionType={"edit"}
+                            />
+                        {:else}
                             {getObjectProperty(item, column)}
                         {/if}
                     </td>

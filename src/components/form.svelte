@@ -64,7 +64,7 @@
     };
 </script>
 
-<div class="{colSize} card p-4">
+<div class="col-{colSize} card p-4">
     {#if showError}
         <Error
             message={"Problem when trying to save. Please verify entered values."}

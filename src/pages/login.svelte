@@ -16,4 +16,4 @@
 
 </script>
 
-<Form {fields} endpoint={"login"}/>
+<Form {fields} endpoint={"login"} colSize={'3'}/>
