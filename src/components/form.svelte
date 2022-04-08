@@ -64,7 +64,7 @@
     };
 </script>
 
-<div class="col-{colSize} card p-4">
+<div class="col-3 p-3">
     {#if showError}
         <Error
             message={"Problem when trying to save. Please verify entered values."}
@@ -73,7 +73,7 @@
 
     {#each fields as field}
         <div class="form-group">
-            <Label name={field.displayName} />
+            <!-- <Label name={field.displayName} /> -->
 
             {#if field.name !== "category" && field.name !== "active"}
                 <Input value={field} />
@@ -101,5 +101,5 @@
         </div>
     {/each}
 
-    <Button type={"default"} name={"Submit"} bind:handleClick={save} />
+    <!-- <Button type={"default"} name={"Submit"} bind:handleClick={save} /> -->
 </div>

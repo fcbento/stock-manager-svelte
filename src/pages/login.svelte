@@ -1,19 +1,66 @@
 <script>
-    import Form from '../components/form.svelte';
+    import Card, { Content, Actions } from "@smui/card";
+    import Button, { Label } from "@smui/button";
+    import Textfield from "@smui/textfield";
+    import HttpHandler from "../http/http";
+    import Error from "../components/error.svelte";
 
-    let fields = [
-        {
-            name: "email",
-            displayName: "Email",
-            type: "text",
-        },
-        {
-            name: "password",
-            displayName: "Password",
-            type: "password",
-        },
-    ];
+    const http = new HttpHandler();
+    const endpoint = "login";
+    const timeout = 2000;
+    const errorMessage = "Something went wrong. Please verify entered values";
 
+    let error = false;
+    let email = "";
+    let password = "";
+
+    const loginUser = () => {
+        http.create({ email, password }, endpoint).then((data) => {
+            data.status === 200 ? (error = false) : (error = true);
+            handleError();
+        });
+    };
+
+    const forgotPassword = () => {
+        console.log("forgotPassword");
+    };
+
+    const handleError = () => {
+        setTimeout(() => {
+            error = false;
+        }, timeout);
+    };
 </script>
 
-<Form {fields} endpoint={"login"} colSize={'3'}/>
+<Card>
+    <Content>
+        <Textfield
+            type="email"
+            label="Email"
+            bind:value={email}
+            style="min-width: 100%;"
+        />
+        <br />
+
+        <Textfield
+            type="password"
+            label="Password"
+            bind:value={password}
+            style="min-width: 100%;"
+        />
+    </Content>
+
+    <Actions>
+        <Button on:click={loginUser}>
+            <Label>Login</Label>
+        </Button>
+
+        <Button on:click={forgotPassword}>
+            <Label>Forgot Password</Label>
+        </Button>
+    </Actions>
+</Card>
+
+{#if error}
+    <Error message={errorMessage} {timeout} />
+{/if}

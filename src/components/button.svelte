@@ -3,6 +3,7 @@
     export let name;
     export let modalActionType;
     export let handleClick = () => console.log("testing");
+    import Button, { Label } from '@smui/button';
 
     export let onDelete = (e) => {
         if ("function" === typeof onDelete) {
@@ -19,15 +20,15 @@
 </script>
 
 {#if type === 'default'}
-    <button
-        style="width: 50%"
-        class="btn btn-primary"
-        on:click={handleClick}>
-        {name}
-    </button>
+    <Button 
+        style="width: 50%" 
+        on:click={handleClick} 
+        variant="unelevated">
+        <Label>{name}</Label>
+    </Button>
 {/if}
 
-{#if type === 'link'}
+<!-- {#if type === 'link'}
     <button
         style="width: 50%"
         class="btn btn-link"
@@ -70,4 +71,4 @@
         data-toggle="modal"
         data-target="#editModal">{name}
     </button>
-{/if}
+{/if} -->
