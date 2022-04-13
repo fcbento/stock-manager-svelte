@@ -31,10 +31,15 @@
             error = false;
         }, timeout);
     };
+
+    const handleKeydown = (event) => {
+        if(event.keyCode === 13)
+            loginUser();
+    }
 </script>
 
 <Card>
-    <Content>
+    <Content on:keydown={handleKeydown}>
         <Textfield
             type="email"
             label="Email"

@@ -45,5 +45,6 @@
     headers={headers}
     columns={columns}
     tableDataSource={httpHandler.getAll('products', 0, 10)}
+    endpoint={'products'}
     showCheckbox={true}
 />
