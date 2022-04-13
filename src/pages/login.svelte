@@ -4,6 +4,7 @@
     import Textfield from "@smui/textfield";
     import HttpHandler from "../http/http";
     import Error from "../components/error.svelte";
+    import Icon from "@smui/textfield/icon";
 
     const http = new HttpHandler();
     const endpoint = "login";
@@ -39,7 +40,9 @@
             label="Email"
             bind:value={email}
             style="min-width: 100%;"
-        />
+        >
+            <Icon class="material-icons" slot="leadingIcon">email</Icon>
+        </Textfield>
         <br />
 
         <Textfield
@@ -47,7 +50,9 @@
             label="Password"
             bind:value={password}
             style="min-width: 100%;"
-        />
+        >
+            <Icon class="material-icons" slot="leadingIcon">lock</Icon>
+        </Textfield>
     </Content>
 
     <Actions>

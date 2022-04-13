@@ -5,95 +5,52 @@
     import Product from "./product.svelte";
     import Supplier from "./supplier.svelte";
     import NavLink from "../components/nav-link.svelte";
-    import HttpHandler from "../http/http";
     import { onMount } from "svelte";
-    import {getUserInfo} from '../utils/user-info';
-
+    import { getUserInfo } from "../utils/user-info";
+    import Tab, { Label } from "@smui/tab";
+    import TabBar from "@smui/tab-bar";
+    import Button from "@smui/button";
+  
     let canSee = false;
 
     onMount(async () => {
-        const isAdmin = getUserInfo().authorities.filter(item => item.authority === "ROLE_ADMIN");
+        const isAdmin = getUserInfo().authorities.filter(
+            (item) => item.authority === "ROLE_ADMIN"
+        );
+
         if (isAdmin.length > 0) canSee = true;
     });
 
     const logout = () => {
-        localStorage.removeItem('token');
-        window.location.assign('http://localhost:5000');
-    }
+        localStorage.removeItem("token");
+        window.location.assign("http://localhost:5000");
+    };
+
+    let active = "Users";
 </script>
 
 <Router>
-    <div class="row">
-        <div class="col-3">
-            <ul>
-                {#if canSee}
-                    <li>
-                        <NavLink to="user">Users</NavLink>
-                    </li>
-                {/if}
+    <button on:click={logout}>Logout</button>
+    
+    <TabBar tabs={["Users", "Products", "Categories"]} let:tab bind:active>
+        <Tab {tab}>
+            <Label>{tab}</Label>
+        </Tab>
+    </TabBar>
 
-                <li>
-                    <NavLink to="category">Categories</NavLink>
-                </li>
+    <div class="status">
 
-                <li>
-                    <NavLink to="product">Product</NavLink>
-                </li>
-                <!-- <li>
-                    <NavLink to="#">Order</NavLink>
-                </li> -->
-                <!-- <li>
-                    <NavLink to="supplier">Supplier</NavLink>
-                </li> -->
+        {#if active === "Users" && canSee}
+            <User/>
+        {/if}
 
-                <button on:click={logout}>Logout</button>
-            </ul>
-        </div>
+        {#if active === "Products"}
+            <Product/>
+        {/if}
 
-        <div class="col-9">
-            <div class="components">
-                <Route path="user">
-                    <User />
-                </Route>
-
-                <Route path="category">
-                    <Category />
-                </Route>
-
-                <Route path="product">
-                    <Product />
-                </Route>
-
-                <Route path="supplier">
-                    <Supplier />
-                </Route>
-            </div>
-        </div>
-
+        {#if active === "Categories"}
+            <Category/>
+        {/if}
 
     </div>
 </Router>
-
-<style>
-    ul {
-        padding: 50px;
-        list-style: none;
-        background: #3f3f3f;
-        height: 100vh;
-    }
-
-    li {
-        margin: 20px;
-        cursor: pointer;
-        color: #ffffff;
-        border: 1px solid black;
-        padding: 15px;
-        background-color: white;
-        text-align: center;
-        border-radius: 10px;
-    }
-
-    .components {
-        padding: 50px;
-    }
-</style>

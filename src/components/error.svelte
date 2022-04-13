@@ -4,8 +4,8 @@
     export let timeout;
 
     let hide = true;
+
     onMount(async () => {
-        console.log('hide', hide)
         hideErrorMessage();
     });
 

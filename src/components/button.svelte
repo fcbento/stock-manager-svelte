@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     export let type;
     export let name;
     export let modalActionType;
@@ -71,4 +71,4 @@
         data-toggle="modal"
         data-target="#editModal">{name}
     </button>
-{/if} -->
+{/if} --> -->

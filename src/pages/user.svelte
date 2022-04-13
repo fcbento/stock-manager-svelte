@@ -1,6 +1,7 @@
 <script>
     import HttpHandler from "../http/http";
-    import Table from '../components/table.svelte';
+    //import Table from '../components/table.svelte';
+    import Table from '../components/data-table.svelte';
     
     let httpHandler = new HttpHandler();
     let headers = ["Name", "Email", "Role"];
@@ -19,10 +20,8 @@
 </script>
 
 <Table 
-    editable={true}
-    {columns}
-    type={'user'} 
-    {headers} 
-    body={httpHandler.getAll('users', 0, 10)} 
-    endpoint={'users'} 
+    headers={headers}
+    columns={columns}
+    tableDataSource={httpHandler.getAll('users', 0, 10)}
+    showCheckbox={false}
 />

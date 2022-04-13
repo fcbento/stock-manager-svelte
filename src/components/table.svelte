@@ -31,6 +31,7 @@
         data = res.content;
     });
 
+    console.log(data)
     let deleteItem = (item) => {
         switch (getCurrentUrl()) {
             case "product":
@@ -132,12 +133,13 @@
                         {#if column.isImage}
                             <span class="material-icons"> image </span>
                         {:else if column.name === "name" && editable}
-                            <Button
-                                type={"modalOpen"}
+                            {getObjectProperty(item, column)}
+                            <!-- <Button
+                                type={"default"}
                                 name={getObjectProperty(item, column)}
                                 onEdit={() => openModal(item)}
                                 modalActionType={"edit"}
-                            />
+                            /> -->
                         {:else}
                             {getObjectProperty(item, column)}
                         {/if}

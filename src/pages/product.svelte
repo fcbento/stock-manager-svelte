@@ -1,10 +1,10 @@
 <script>
-    import Table from "../components/table.svelte";
+    //import Table from "../components/table.svelte";
     import HttpHandler from "../http/http";
-
+    import Table from '../components/data-table.svelte';
     const httpHandler = new HttpHandler();
     //create model
-    const headers = ["", "Name", "Price", "Quantity", "Image URL", "Category", "Created At", "Total"];
+    const headers = ["Name", "Price", "Quantity", "Image URL", "Category", "Created At", "Total"];
     //create model
     const columns = [
         {
@@ -42,11 +42,8 @@
 </script>
 
 <Table
-    editable={true}
+    headers={headers}
+    columns={columns}
+    tableDataSource={httpHandler.getAll('products', 0, 10)}
     showCheckbox={true}
-    {columns}
-    type={'product'} 
-    {headers} 
-    body={httpHandler.getAll('products', 0, 10)} 
-    endpoint={'products'} 
 />
