@@ -32,7 +32,6 @@
 
   onMount(async () => {
     const res = await tableDataSource.then((result) => result);
-    console.log(res);
     result = res;
     currentPage = res.number;
     data = res.content;
@@ -42,36 +41,40 @@
   });
 
   const paginate = (type) => {
+    getPagedType(type);
 
-    switch (type) {
+    return httpHandler
+      .getAll(endpoint, currentPage, rowsPerPage)
+      .then((res) => {
+        data = res.content;
+        result = res;
 
-      case 'first':
-        currentPage = 0;
-        break;
-      
-        case 'prev':
-        currentPage--;
-        break;
+        start = result.number * rowsPerPage;
+        end = Math.min(start + rowsPerPage, result.totalElements);
+      });
+  };
 
-      case 'next':
-        currentPage++;
-        break;
+  const getPagedType = (type) => {
+    const types = {
+      first: () => (currentPage = 0),
+      prev: () => currentPage--,
+      next: () => currentPage++,
+      last: () => currentPage = (result.totalPages - 1)
+    };
 
-      case 'last':
-        currentPage = result.totalPages;
-        break;
+    return types[type]();
+  };
 
-      default:
-        break;
-    }
+  const eventChange = (rowsPerPage) => {
+    return httpHandler
+      .getAll(endpoint, currentPage, rowsPerPage)
+      .then((res) => {
+        data = res.content;
+        result = res;
 
-    return httpHandler.getAll(endpoint, currentPage, 10).then((res) => {
-      data = res.content;
-      result = res;
-
-      start = result.number * rowsPerPage;
-      end = Math.min(start + rowsPerPage, result.totalElements);
-    });
+        start = result.number * rowsPerPage;
+        end = Math.min(start + rowsPerPage, result.totalElements);
+      });
   };
 </script>
 
@@ -113,9 +116,9 @@
     <svelte:fragment slot="rowsPerPage">
       <Label>Rows Per Page</Label>
       <Select variant="outlined" bind:value={rowsPerPage} noLabel>
-        <Option value={10}>10</Option>
-        <Option value={25}>25</Option>
-        <Option value={100}>100</Option>
+        <Option value={10} on:click={() => eventChange(10)}>10</Option>
+        <Option value={25} on:click={() => eventChange(25)}>25</Option>
+        <Option value={100} on:click={() => eventChange(100)}>100</Option>
       </Select>
     </svelte:fragment>
 
@@ -127,7 +130,7 @@
       class="material-icons"
       action="first-page"
       title="First page"
-      on:click={() => paginate('first')}
+      on:click={() => paginate("first")}
       disabled={result?.first}>first_page</IconButton
     >
 
@@ -135,7 +138,7 @@
       class="material-icons"
       action="prev-page"
       title="Prev page"
-      on:click={() => paginate('prev')}
+      on:click={() => paginate("prev")}
       disabled={result?.first}>chevron_left</IconButton
     >
 
@@ -143,7 +146,7 @@
       class="material-icons"
       action="next-page"
       title="Next page"
-      on:click={() => paginate('next')}
+      on:click={() => paginate("next")}
       disabled={result?.last}>chevron_right</IconButton
     >
 
@@ -151,7 +154,7 @@
       class="material-icons"
       action="last-page"
       title="Last page"
-      on:click={() =>paginate('last')}
+      on:click={() => paginate("last")}
       disabled={result?.last}>last_page</IconButton
     >
   </Pagination>
