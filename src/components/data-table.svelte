@@ -12,70 +12,60 @@
   import Select, { Option } from "@smui/select";
   import IconButton from "@smui/icon-button";
   import { Label } from "@smui/common";
-  import HttpHandler from "../http/http";
+	import { createEventDispatcher } from 'svelte';
 
   export let tableDataSource;
   export let headers;
   export let columns;
   export let showCheckbox;
-  export let endpoint;
-
-  let httpHandler = new HttpHandler();
+	export let value = {};
 
   let selected = [];
-  let data = [];
-  let result;
   let rowsPerPage = 10;
   let currentPage = 0;
   let end = 0;
   let start;
 
+	const dispatch = createEventDispatcher();
+  const submit = () => dispatch('submit');
+  
   onMount(async () => {
-    const res = await tableDataSource.then((result) => result);
-    result = res;
-    currentPage = res.number;
-    data = res.content;
-
-    start = result.number * rowsPerPage;
-    end = Math.min(start + rowsPerPage, result.totalElements);
+    start = tableDataSource.number * rowsPerPage;
+    end = Math.min(start + rowsPerPage, tableDataSource.totalElements);
   });
 
   const paginate = (type) => {
     getPagedType(type);
-
-    return httpHandler
-      .getAll(endpoint, currentPage, rowsPerPage)
-      .then((res) => {
-        data = res.content;
-        result = res;
-
-        start = result.number * rowsPerPage;
-        end = Math.min(start + rowsPerPage, result.totalElements);
-      });
+    emitPaginationValues(rowsPerPage);
+    setStartEndAfterChanges();
   };
+
+  const eventChange = (rowsPerPage) => {
+    emitPaginationValues(rowsPerPage);
+    setStartEndAfterChanges();
+  };
+
+  const emitPaginationValues = (rowsPerPage = 10) => {
+    value = {rowsPerPage, page: currentPage};
+    submit();
+  }
+
+  const setStartEndAfterChanges = () => {
+    start = currentPage * rowsPerPage;
+    end = Math.min(start + rowsPerPage, tableDataSource.totalElements);
+  }
 
   const getPagedType = (type) => {
     const types = {
       first: () => (currentPage = 0),
       prev: () => currentPage--,
       next: () => currentPage++,
-      last: () => currentPage = (result.totalPages - 1)
+      last: () => (currentPage = tableDataSource.totalPages - 1),
     };
 
     return types[type]();
   };
 
-  const eventChange = (rowsPerPage) => {
-    return httpHandler
-      .getAll(endpoint, currentPage, rowsPerPage)
-      .then((res) => {
-        data = res.content;
-        result = res;
-
-        start = result.number * rowsPerPage;
-        end = Math.min(start + rowsPerPage, result.totalElements);
-      });
-  };
 </script>
 
 <!-- svelte-ignore missing-declaration -->
@@ -95,7 +85,7 @@
   </Head>
 
   <Body>
-    {#each data as item}
+    {#each tableDataSource?.content as item}
       <Row>
         {#if showCheckbox}
           <Cell checkbox>
@@ -123,7 +113,7 @@
     </svelte:fragment>
 
     <svelte:fragment slot="total">
-      {start + 1}-{end} of {result?.totalElements}
+      {start + 1}-{end} of {tableDataSource?.totalElements}
     </svelte:fragment>
 
     <IconButton
@@ -131,7 +121,7 @@
       action="first-page"
       title="First page"
       on:click={() => paginate("first")}
-      disabled={result?.first}>first_page</IconButton
+      disabled={tableDataSource?.first}>first_page</IconButton
     >
 
     <IconButton
@@ -139,7 +129,7 @@
       action="prev-page"
       title="Prev page"
       on:click={() => paginate("prev")}
-      disabled={result?.first}>chevron_left</IconButton
+      disabled={tableDataSource?.first}>chevron_left</IconButton
     >
 
     <IconButton
@@ -147,7 +137,7 @@
       action="next-page"
       title="Next page"
       on:click={() => paginate("next")}
-      disabled={result?.last}>chevron_right</IconButton
+      disabled={tableDataSource?.last}>chevron_right</IconButton
     >
 
     <IconButton
@@ -155,7 +145,7 @@
       action="last-page"
       title="Last page"
       on:click={() => paginate("last")}
-      disabled={result?.last}>last_page</IconButton
+      disabled={tableDataSource?.last}>last_page</IconButton
     >
   </Pagination>
 </DataTable>

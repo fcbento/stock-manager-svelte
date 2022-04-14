@@ -3,14 +3,12 @@
     import User from "./user.svelte";
     import Category from "./category.svelte";
     import Product from "./product.svelte";
-    import Supplier from "./supplier.svelte";
-    import NavLink from "../components/nav-link.svelte";
     import { onMount } from "svelte";
     import { getUserInfo } from "../utils/user-info";
     import Tab, { Label } from "@smui/tab";
     import TabBar from "@smui/tab-bar";
-    import Button from "@smui/button";
-  
+    import Landing from "../pages/landing.svelte";
+
     let canSee = false;
 
     onMount(async () => {
@@ -26,19 +24,22 @@
         window.location.assign("http://localhost:5000");
     };
 
-    let active = "Users";
+    let active = "Home";
 </script>
 
 <Router>
     <button on:click={logout}>Logout</button>
     
-    <TabBar tabs={["Users", "Products", "Categories"]} let:tab bind:active>
+    <TabBar tabs={["Home", "Users", "Products", "Categories"]} let:tab bind:active>
         <Tab {tab}>
             <Label>{tab}</Label>
         </Tab>
     </TabBar>
 
     <div class="status">
+        {#if active === "Home"}
+             <Landing/>
+        {/if}
 
         {#if active === "Users" && canSee}
             <User/>

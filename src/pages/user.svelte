@@ -1,9 +1,8 @@
 <script>
-    import HttpHandler from "../http/http";
-    //import Table from '../components/table.svelte';
+    import { onMount } from 'svelte';
+
     import Table from '../components/data-table.svelte';
-    
-    let httpHandler = new HttpHandler();
+    import {fetchUsers, users} from '../stores/users';
     let headers = ["Name", "Email", "Role"];
     let columns = [
         {
@@ -16,12 +15,26 @@
             name: 'role'
         }
     ]
-    
+    	
+    onMount(async () => {
+        console.log('mounted')
+        //fetchUsers();
+    });
+
+    let pagination = {};
+
+    const fetchUsersPaginated = () => {
+        fetchUsers(pagination.rowsPerPage, pagination.page);
+	}
+
+  
 </script>
 
-<Table 
+<Table
     headers={headers}
     columns={columns}
-    tableDataSource={httpHandler.getAll('users', 0, 10)}
-    showCheckbox={false}
+    tableDataSource={($users)}
+    showCheckbox={true}
+    bind:value={pagination} 
+    on:submit={fetchUsersPaginated}
 />
