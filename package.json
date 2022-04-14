@@ -13,6 +13,7 @@
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
+    "@smui-extra/accordion": "^6.0.0-beta.16",
     "@smui/button": "^6.0.0-beta.15",
     "@smui/card": "^6.0.0-beta.15",
     "@smui/data-table": "^6.0.0-beta.15",

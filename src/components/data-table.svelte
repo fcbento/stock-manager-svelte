@@ -12,13 +12,13 @@
   import Select, { Option } from "@smui/select";
   import IconButton from "@smui/icon-button";
   import { Label } from "@smui/common";
-	import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
 
   export let tableDataSource;
   export let headers;
   export let columns;
   export let showCheckbox;
-	export let value = {};
+  export let value = {};
 
   let selected = [];
   let rowsPerPage = 10;
@@ -26,9 +26,9 @@
   let end = 0;
   let start;
 
-	const dispatch = createEventDispatcher();
-  const submit = () => dispatch('submit');
-  
+  const dispatch = createEventDispatcher();
+  const submit = () => dispatch("submit");
+
   onMount(async () => {
     start = tableDataSource.number * rowsPerPage;
     end = Math.min(start + rowsPerPage, tableDataSource.totalElements);
@@ -46,14 +46,14 @@
   };
 
   const emitPaginationValues = (rowsPerPage = 10) => {
-    value = {rowsPerPage, page: currentPage};
+    value = { rowsPerPage, page: currentPage };
     submit();
-  }
+  };
 
   const setStartEndAfterChanges = () => {
     start = currentPage * rowsPerPage;
     end = Math.min(start + rowsPerPage, tableDataSource.totalElements);
-  }
+  };
 
   const getPagedType = (type) => {
     const types = {
@@ -65,11 +65,11 @@
 
     return types[type]();
   };
-
 </script>
 
 <!-- svelte-ignore missing-declaration -->
-<DataTable style="max-width: 100%; margin-top: 90px">
+
+<DataTable style="width: 100%">
   <Head>
     <Row>
       {#if showCheckbox}

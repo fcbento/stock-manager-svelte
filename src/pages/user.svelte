@@ -1,40 +1,36 @@
 <script>
-    import { onMount } from 'svelte';
-
-    import Table from '../components/data-table.svelte';
-    import {fetchUsers, users} from '../stores/users';
+    import LayoutGrid, {Cell} from "@smui/layout-grid";
+    import Table from "../components/data-table.svelte";
+    import { fetchUsers, users } from "../stores/users";
     let headers = ["Name", "Email", "Role"];
     let columns = [
         {
-            name: 'name'
+            name: "name",
         },
         {
-            name: 'email'
+            name: "email",
         },
         {
-            name: 'role'
-        }
-    ]
-    	
-    onMount(async () => {
-        console.log('mounted')
-        //fetchUsers();
-    });
+            name: "role",
+        },
+    ];
 
     let pagination = {};
 
     const fetchUsersPaginated = () => {
         fetchUsers(pagination.rowsPerPage, pagination.page);
-	}
-
-  
+    };
 </script>
 
-<Table
-    headers={headers}
-    columns={columns}
-    tableDataSource={($users)}
-    showCheckbox={true}
-    bind:value={pagination} 
-    on:submit={fetchUsersPaginated}
-/>
+<LayoutGrid>
+    <Cell span={12}>
+        <Table
+            {headers}
+            {columns}
+            tableDataSource={$users}
+            showCheckbox={true}
+            bind:value={pagination}
+            on:submit={fetchUsersPaginated}
+        />
+    </Cell>
+</LayoutGrid>
